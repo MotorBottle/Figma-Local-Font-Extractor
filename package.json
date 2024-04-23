@@ -13,12 +13,26 @@
     "productName": "Figma Font Extract Helper",
     "files": [
       "**/*",
-      "GetFont.py"
+      "GetFont.py",
+      "install_dependencies.cmd",
+      "libinstall.sh"
     ],
     "extraResources": [
       {
         "from": "./GetFont.py",
         "to": "GetFont.py"
+      },
+      {
+        "from": "./install_dependencies.cmd",
+        "to": "install_dependencies.cmd"
+      },
+      {
+        "from": "./libinstall.sh",
+        "to": "libinstall.sh"
+      },
+      {
+        "from": "./python",
+        "to": "python"
       }
     ],
     "win": {

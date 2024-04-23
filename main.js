@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const express = require('express');
 const cors = require('cors');
 const { spawn } = require('child_process');
+const { exec } = require('child_process');
+
 
 const server = express();
 server.use(cors()); // This will allow all domains to access your server
@@ -31,18 +33,44 @@ const defaultSettings = { rootFolderPath: defaultFolderPath };
 
 // For development
 // let pythonScriptPath = path.join(__dirname, 'GetFont.py');
+// let pythonExecutablePath;
+// if (process.platform === "win32") {
+//   // Path for Windows bundled Python executable
+//   pythonExecutablePath = path.join(__dirname, 'python', 'Scripts', 'python.exe'); // For Windows
+// } else {
+//   // Default to system Python on macOS (and potentially other Unix-like systems)
+//   pythonExecutablePath = 'python3';
+// }
 
+// For dist
 let pythonScriptPath = path.join(process.resourcesPath, 'GetFont.py');
+let pythonExecutablePath;
+if (process.platform === "win32") {
+  // Path for Windows bundled Python executable
+  pythonExecutablePath = path.join(process.resourcesPath, 'python', 'Scripts', 'python.exe'); // For Windows
+} else {
+  // Default to system Python on macOS (and potentially other Unix-like systems)
+  pythonExecutablePath = 'python3';
+}
 
 let rootFolderPath = app.getPath('userData');
 let dataFilePath = path.join(rootFolderPath, 'design_files_metadata.json');
 
 let mainWindow;
 
-app.whenReady().then(() => {
-  setupIPCListeners();
-  initializeAppSettings();
-});
+async function initializeApp() {
+    try {
+        await checkAndInstallDependencies(); // Assuming this is promisified or synchronous
+        setupIPCListeners(); // Setup IPC listeners for app communication
+        initializeAppSettings(); // Load or set default settings
+        createWindow();
+    } catch (error) {
+        console.error("Failed to initialize the application:", error);
+        app.quit(); // Optionally quit the app if initialization fails critically
+    }
+}
+
+app.whenReady().then(initializeApp);
 
 function initializeAppSettings() {
   let settings = loadSettings();
@@ -56,8 +84,6 @@ function initializeAppSettings() {
   if (!fs.existsSync(dataFilePath)) {
       fs.writeFileSync(dataFilePath, JSON.stringify([]), 'utf-8');
   }
-
-  createWindow();
 }
 
 function createWindow() {
@@ -105,6 +131,27 @@ function loadSettings() {
       console.error("Failed to load settings:", error);
       return defaultSettings;  // Return defaults if there's an error reading the file
   }
+}
+
+function checkAndInstallDependencies() {
+  return new Promise((resolve, reject) => {
+    // let scriptPath = path.join(__dirname, process.platform === 'win32' ? 'install_dependencies.cmd' : 'libinstall.sh');
+    let scriptPath = path.join(process.resourcesPath, process.platform === 'win32' ? 'install_dependencies.cmd' : 'libinstall.sh');
+
+    // Execute the script
+    exec(`"${scriptPath}"`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing dependency script: ${error}`);
+            reject(error);
+            return;
+        }
+        if (stderr) {
+            console.error(`Errors during dependency check: ${stderr}`);
+        }
+        console.log(stdout);
+        resolve(stdout);
+    });
+  });
 }
 
 function generateUniqueFolderName(baseName) {
@@ -175,7 +222,7 @@ function setupIPCListeners() {
     const fontFamiliesArg = fontFamilies.join(',');
   
     // Spawn the Python process
-    const pythonProcess = spawn('python', [pythonScriptPath, fontFamiliesArg, destFolder]);
+    const pythonProcess = spawn(pythonExecutablePath, [pythonScriptPath, fontFamiliesArg, destFolder]);
   
     pythonProcess.stdout.on('data', (data) => {
       // Parse the data received from the Python script
