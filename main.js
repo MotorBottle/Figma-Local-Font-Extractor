@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -215,5 +215,8 @@ function setupIPCListeners() {
       require('electron').shell.openPath(folderPath);
   });
 
+  ipcMain.on('open-external-link', (event, url) => {
+    shell.openExternal(url).catch(err => console.log('Failed to open URL:', err));
+  });
 }
 

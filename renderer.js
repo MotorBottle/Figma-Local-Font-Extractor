@@ -10,9 +10,8 @@ selectFolderButton.addEventListener('click', () => {
     ipcRenderer.send('select-folder');
 });
 
-// Event listener for toggling the server
 toggleServerButton.addEventListener('click', () => {
-    ipcRenderer.send('toggle-server'); // Adjust based on actual server start/stop functionality
+    ipcRenderer.send('open-external-link', 'https://github.com/MotorBottle/Figma-Local-Font-Extractor');
 });
 
 // Update the design file list from the main process
@@ -64,4 +63,4 @@ ipcRenderer.on('fonts-copied', (event, { status, message, count, copiedFiles }) 
     }
     // Additional logic as needed
 });
-  
+

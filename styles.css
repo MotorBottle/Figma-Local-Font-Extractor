@@ -81,6 +81,22 @@
   padding: 8px 12px;
   border-radius: 6px;
   margin-right: 10px;
+  display: inline-block; /* Maintains the inline-block behavior */
+  text-decoration: none; /* Removes underline */
+  color: inherit; /* Inherits the text color from the parent or defaults */
+}
+
+.clear-button-style:hover {
+  text-decoration: none; /* Optional: Ensures no underline on hover */
+  /* You can add hover effects like color change or background */
+}
+
+.clear-button-style img {
+  vertical-align: middle; /* Aligns the icon with the text */
+}
+
+.clear-button-style span {
+  vertical-align: middle; /* Ensures text aligns with images/icons */
 }
 
 .button-style {
