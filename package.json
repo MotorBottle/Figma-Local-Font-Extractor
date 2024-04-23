@@ -1,16 +1,51 @@
 {
   "name": "fontextractor",
   "version": "1.0.0",
-  "description": "",
+  "description": "Figma project font management on local computer and extract for shairng",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder -w"
+  },
+  "build": {
+    "appId": "com.MotrBottle.figmafontextractor",
+    "productName": "Figma Font Extract Helper",
+    "files": [
+      "**/*",
+      "GetFont.py"
+    ],
+    "extraResources": [
+      {
+        "from": "./GetFont.py",
+        "to": "GetFont.py"
+      }
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "icon.icns"
+    },
+    "dmg": {
+      "sign": false
+    },
+    "directories": {
+      "output": "release-builds"
+    }
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "MotorBottle",
+  "license": "MIT",
   "devDependencies": {
-    "electron": "^30.0.1"
+    "electron": "^30.0.1",
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "cors": "^2.8.5",

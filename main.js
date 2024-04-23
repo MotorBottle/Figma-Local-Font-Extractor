@@ -26,57 +26,62 @@ server.listen(PORT, () => {
 
 // Set a default path for the root folder where fonts and metadata will be stored
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
-const defaultSettings = {
-  rootFolderPath: app.getPath('documents'),  // Default path to user's Documents folder
-};
+const defaultFolderPath = path.join(app.getPath('downloads'), 'ExtractedFonts');
+const defaultSettings = { rootFolderPath: defaultFolderPath };
+
+// For development
+// let pythonScriptPath = path.join(__dirname, 'GetFont.py');
+
+let pythonScriptPath = path.join(process.resourcesPath, 'GetFont.py');
 
 let rootFolderPath = app.getPath('userData');
 let dataFilePath = path.join(rootFolderPath, 'design_files_metadata.json');
 
 let mainWindow;
 
+app.whenReady().then(() => {
+  setupIPCListeners();
+  initializeAppSettings();
+});
+
+function initializeAppSettings() {
+  let settings = loadSettings();
+  rootFolderPath = settings.rootFolderPath;
+  dataFilePath = path.join(rootFolderPath, 'design_files_metadata.json');
+
+  // Ensure the root folder and the JSON file exist
+  if (!fs.existsSync(rootFolderPath)) {
+      fs.mkdirSync(rootFolderPath, { recursive: true });
+  }
+  if (!fs.existsSync(dataFilePath)) {
+      fs.writeFileSync(dataFilePath, JSON.stringify([]), 'utf-8');
+  }
+
+  createWindow();
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
+      width: 800,
+      height: 600,
+      icon: path.join(__dirname, 'icon' + (process.platform === 'darwin' ? '.icns' : '.ico')), // Chooses .icns for Mac, .ico for others
+      webPreferences: {
+          nodeIntegration: true,
+          contextIsolation: false,
+      },
   });
-
   mainWindow.loadFile('index.html');
-
-  mainWindow.webContents.on('did-finish-load', () => {
-    // Ensure settings are loaded and then send the path
-    const settings = loadSettings();
-    rootFolderPath = settings.rootFolderPath;
-    mainWindow.webContents.send('folder-selected', rootFolderPath);
-    sendDesignFileRecords(); // After ensuring the data file exists
-  });
-
   mainWindow.once('ready-to-show', () => {
       mainWindow.show();
+      mainWindow.webContents.send('folder-selected', rootFolderPath);
+      sendDesignFileRecords();
   });
 }
 
-app.whenReady().then(() => {
-  setupIPCListeners();  // Ensure this is done before createWindow()
-  const settings = loadSettings();
-  rootFolderPath = settings.rootFolderPath;
-  dataFilePath = path.join(rootFolderPath, 'design_files_metadata.json');
-  createWindow();
-  if (rootFolderPath) {
-    mainWindow.webContents.send('folder-selected', rootFolderPath);
-  }
-  if (fs.existsSync(dataFilePath)) {
-      sendDesignFileRecords();
-  }
-});
-
-
 app.on('window-all-closed', () => {
-  app.quit();
+  if (process.platform !== 'darwin') {
+      app.quit();
+  }
 });
 
 function saveSettings(settings) {
@@ -170,7 +175,7 @@ function setupIPCListeners() {
     const fontFamiliesArg = fontFamilies.join(',');
   
     // Spawn the Python process
-    const pythonProcess = spawn('python', [path.join(__dirname, 'GetFont.py'), fontFamiliesArg, destFolder]);
+    const pythonProcess = spawn('python', [pythonScriptPath, fontFamiliesArg, destFolder]);
   
     pythonProcess.stdout.on('data', (data) => {
       // Parse the data received from the Python script
