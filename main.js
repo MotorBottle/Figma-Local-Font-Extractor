@@ -36,7 +36,7 @@ const defaultSettings = { rootFolderPath: defaultFolderPath };
 // let pythonExecutablePath;
 // if (process.platform === "win32") {
 //   // Path for Windows bundled Python executable
-//   pythonExecutablePath = path.join(__dirname, 'python', 'Scripts', 'python.exe'); // For Windows
+//   pythonExecutablePath = path.join(__dirname, 'python', 'python.exe'); // For Windows
 // } else {
 //   // Default to system Python on macOS (and potentially other Unix-like systems)
 //   pythonExecutablePath = 'python3';

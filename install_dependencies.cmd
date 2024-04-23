@@ -1,10 +1,16 @@
 @echo off
 SETLOCAL
 
-@REM REM Set the directory where Python is located
-@REM SET PYTHON_DIR=%~dp0python
+REM Set the directory where the bundled Python is located
+SET PYTHON_DIR=%~dp0..\python
 
-@REM REM Add Python and the Scripts directory to the PATH
-@REM SET PATH=%PYTHON_DIR%;%PYTHON_DIR%\Scripts;%PYTHON_DIR%\Lib;%PATH%
+REM Ensure the Python executable and Scripts directory are in the PATH
+SET PATH=%PYTHON_DIR%;%PYTHON_DIR%\Scripts;%PATH%
+
+REM Optionally check Python version
+%PYTHON_DIR%\python.exe --version
+
+REM Optionally list installed packages to verify the environment
+%PYTHON_DIR%\python.exe -m pip list
 
 ENDLOCAL

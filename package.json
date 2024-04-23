@@ -32,7 +32,8 @@
       },
       {
         "from": "./python",
-        "to": "python"
+        "to": "python",
+        "filter": ["**/*"]
       }
     ],
     "win": {
