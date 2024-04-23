@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <title>Font Manager</title>
+</head>
+<body>
+  <div id="container">
+    <p id="currentPath">Current Path: Not set</p>
+    <div id="header">
+      <div id="selectFolderButton" class="button-style">
+        <img src="path.svg" alt="Select Folder" title="Select Folder" style="width: 28px; height: 28px;">
+        <span>Select Font Export Folder</span>
+      </div>
+      <div id="toggleServerButton" class="clear-button-style">
+        <img src="github.svg" alt="Select Folder" title="Select Folder" style="width: 22px; height: 22px;">
+        <span>Check Github Page</span>
+      </div>
+    </div>
+    <div id="designFileList" class="design-file-list">
+      <!-- Injected design file records will appear here -->
+    </div>
+  </div>
+  <script src="renderer.js"></script>
+  <script>
+    function adjustListHeight() {
+        const containerTopOffset = document.getElementById('container').offsetTop;
+        const headerHeight = document.getElementById('header').offsetHeight;
+        const currentPathHeight = document.getElementById('currentPath').offsetHeight;
+        const availableHeight = window.innerHeight - (containerTopOffset + headerHeight + currentPathHeight + 90); // 60px for margin and padding adjustments
+        document.getElementById('designFileList').style.height = `${availableHeight}px`;
+    }
+
+    window.addEventListener('resize', adjustListHeight);
+    document.addEventListener('DOMContentLoaded', adjustListHeight);
+  </script>
+</body>
+</html>

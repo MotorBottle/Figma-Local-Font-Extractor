@@ -1,0 +1,140 @@
+#container {
+  padding: 20px;
+}
+
+#selectFolderButton,
+#toggleServerButton {
+  margin: 10px 0;
+}
+
+.design-file-list {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-height: 280px;
+  overflow-y: scroll;
+}
+
+/* .design-file-record:last-child {
+  border-bottom: none;
+} */
+
+.design-file-title {
+  font-weight: bold;
+}
+
+.fonts-list {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.design-file-record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #eee;
+}
+
+.design-file-record button {
+  margin-left: 10px;
+}
+
+#header img {
+  cursor: pointer;
+  margin-right: 5px;
+  width: 24px;
+  height: 24px;
+}
+
+.design-file-actions img {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: opacity 0.3s;
+}
+
+.design-file-actions img:hover {
+  opacity: 0.7;
+}
+
+.design-file-details {
+  flex-grow: 1; /* Allows the details section to take up any extra space */
+}
+
+.design-file-actions {
+  display: flex;
+  width: 57px;
+  align-items: left;
+  margin-right: 15px;
+  justify-content: center; /* Center the icons horizontally */
+}
+
+.clear-button-style {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-right: 10px;
+}
+
+.button-style {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-right: 10px;
+}
+
+.button-style:hover {
+  background-color: #e7e7e7;
+}
+
+.button-style span {
+  margin-left: 5px;
+}
+
+#header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.design-file-fonts {
+  padding-right: 15px;
+  font-size: 12px;
+}
+
+.design-file-updated {
+  font-size: 14px;
+}
+
+#currentPath {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.design-file-list::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+}
+
+.design-file-list::-webkit-scrollbar-track {
+  background: #f1f1f100; /* Track color */
+}
+
+.design-file-list::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: #888; /* Thumb color */
+}
+
+.design-file-list::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Thumb hover color */
+}
