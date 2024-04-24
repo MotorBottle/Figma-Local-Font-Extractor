@@ -47,7 +47,7 @@ let pythonScriptPath = path.join(process.resourcesPath, 'GetFont.py');
 let pythonExecutablePath;
 if (process.platform === "win32") {
   // Path for Windows bundled Python executable
-  pythonExecutablePath = path.join(process.resourcesPath, 'python', 'Scripts', 'python.exe'); // For Windows
+  pythonExecutablePath = path.join(process.resourcesPath, 'python', 'python.exe'); // For Windows
 } else {
   // Default to system Python on macOS (and potentially other Unix-like systems)
   pythonExecutablePath = 'python3';
