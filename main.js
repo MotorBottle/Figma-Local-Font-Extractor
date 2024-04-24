@@ -32,26 +32,26 @@ const defaultFolderPath = path.join(app.getPath('downloads'), 'ExtractedFonts');
 const defaultSettings = { rootFolderPath: defaultFolderPath };
 
 // For development
-let pythonScriptPath = path.join(__dirname, 'GetFont.py');
-let pythonExecutablePath;
-if (process.platform === "win32") {
-  // Path for Windows bundled Python executable
-  pythonExecutablePath = path.join(__dirname, 'python', 'python.exe'); // For Windows
-} else {
-  // Default to system Python on macOS (and potentially other Unix-like systems)
-  pythonExecutablePath = 'python3';
-}
-
-// For dist
-// let pythonScriptPath = path.join(process.resourcesPath, 'GetFont.py');
+// let pythonScriptPath = path.join(__dirname, 'GetFont.py');
 // let pythonExecutablePath;
 // if (process.platform === "win32") {
 //   // Path for Windows bundled Python executable
-//   pythonExecutablePath = path.join(process.resourcesPath, 'python', 'python.exe'); // For Windows
+//   pythonExecutablePath = path.join(__dirname, 'python', 'python.exe'); // For Windows
 // } else {
 //   // Default to system Python on macOS (and potentially other Unix-like systems)
 //   pythonExecutablePath = 'python3';
 // }
+
+// For dist
+let pythonScriptPath = path.join(process.resourcesPath, 'GetFont.py');
+let pythonExecutablePath;
+if (process.platform === "win32") {
+  // Path for Windows bundled Python executable
+  pythonExecutablePath = path.join(process.resourcesPath, 'python', 'python.exe'); // For Windows
+} else {
+  // Default to system Python on macOS (and potentially other Unix-like systems)
+  pythonExecutablePath = 'python3';
+}
 
 let rootFolderPath = app.getPath('userData');
 let dataFilePath = path.join(rootFolderPath, 'design_files_metadata.json');
@@ -135,24 +135,53 @@ function loadSettings() {
 
 function checkAndInstallDependencies() {
   return new Promise((resolve, reject) => {
-    let scriptPath = path.join(__dirname, process.platform === 'win32' ? 'install_dependencies.cmd' : 'libinstall.sh');
-    // let scriptPath = path.join(process.resourcesPath, process.platform === 'win32' ? 'install_dependencies.cmd' : 'libinstall.sh');
+    // let scriptPath = path.join(__dirname, process.platform === 'win32' ? 'install_dependencies.cmd' : 'check_and_install_fonttools.py');
+    let scriptPath = path.join(process.resourcesPath, process.platform === 'win32' ? 'install_dependencies.cmd' : 'check_and_install_fonttools.py');
 
-    // Execute the script
-    exec(`"${scriptPath}"`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing dependency script: ${error}`);
-            reject(error);
-            return;
+    if (process.platform !== 'win32') {
+      // Try to set permissions on macOS/Linux before executing
+      exec(`chmod +x "${scriptPath}"`, (chmodError) => {
+        if (chmodError) {
+          console.error(`Error setting permissions: ${chmodError}`);
+          reject(chmodError);
+          return;
         }
-        if (stderr) {
-            console.error(`Errors during dependency check: ${stderr}`);
-        }
-        console.log(stdout);
-        resolve(stdout);
-    });
+        executeDependencyScript(scriptPath, resolve, reject);
+      });
+    } else {
+      executeDependencyScript(scriptPath, resolve, reject);
+    }
   });
 }
+
+function executeDependencyScript(scriptPath, resolve, reject) {
+  exec(`"${scriptPath}"`, (error, stdout, stderr) => {
+    if (error || (stderr && !isIgnorableWarning(stderr))) {
+      console.error(`Error executing dependency script: ${error || stderr}`);
+      reject(error || new Error(stderr));
+      return;
+    }
+    if (stderr) {
+      console.warn(`Warnings during dependency check: ${stderr}`);
+    }
+    console.log(`Output from dependency script: ${stdout}`);
+    resolve(stdout);
+  });
+}
+
+// Helper function to determine if stderr content is an ignorable warning
+function isIgnorableWarning(stderr) {
+  // Define what warnings can be ignored (e.g., PATH warnings or known non-critical warnings)
+  const ignorablePatterns = [
+      /is not on PATH/i,
+      /You are using pip version/i,
+      /Consider adding this directory to PATH/i,
+      /You should consider upgrading via/i
+  ];
+  return ignorablePatterns.some(pattern => pattern.test(stderr));
+}
+
+
 
 function generateUniqueFolderName(baseName) {
   const suffix = crypto.randomBytes(3).toString('hex').toUpperCase();

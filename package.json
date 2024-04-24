@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -w"
+    "dist": "electron-builder -m"
   },
   "build": {
     "appId": "com.MotrBottle.figmafontextractor",
@@ -15,7 +15,7 @@
       "**/*",
       "GetFont.py",
       "install_dependencies.cmd",
-      "libinstall.sh"
+      "check_and_install_fonttools.py"
     ],
     "extraResources": [
       {
@@ -27,8 +27,8 @@
         "to": "install_dependencies.cmd"
       },
       {
-        "from": "./libinstall.sh",
-        "to": "libinstall.sh"
+        "from": "./check_and_install_fonttools.py",
+        "to": "check_and_install_fonttools.py"
       },
       {
         "from": "./python",
