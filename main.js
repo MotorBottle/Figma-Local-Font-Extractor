@@ -32,26 +32,26 @@ const defaultFolderPath = path.join(app.getPath('downloads'), 'ExtractedFonts');
 const defaultSettings = { rootFolderPath: defaultFolderPath };
 
 // For development
-// let pythonScriptPath = path.join(__dirname, 'GetFont.py');
-// let pythonExecutablePath;
-// if (process.platform === "win32") {
-//   // Path for Windows bundled Python executable
-//   pythonExecutablePath = path.join(__dirname, 'python', 'python.exe'); // For Windows
-// } else {
-//   // Default to system Python on macOS (and potentially other Unix-like systems)
-//   pythonExecutablePath = 'python3';
-// }
-
-// For dist
-let pythonScriptPath = path.join(process.resourcesPath, 'GetFont.py');
+let pythonScriptPath = path.join(__dirname, 'GetFont.py');
 let pythonExecutablePath;
 if (process.platform === "win32") {
   // Path for Windows bundled Python executable
-  pythonExecutablePath = path.join(process.resourcesPath, 'python', 'python.exe'); // For Windows
+  pythonExecutablePath = path.join(__dirname, 'python', 'python.exe'); // For Windows
 } else {
   // Default to system Python on macOS (and potentially other Unix-like systems)
   pythonExecutablePath = 'python3';
 }
+
+// For dist
+// let pythonScriptPath = path.join(process.resourcesPath, 'GetFont.py');
+// let pythonExecutablePath;
+// if (process.platform === "win32") {
+//   // Path for Windows bundled Python executable
+//   pythonExecutablePath = path.join(process.resourcesPath, 'python', 'python.exe'); // For Windows
+// } else {
+//   // Default to system Python on macOS (and potentially other Unix-like systems)
+//   pythonExecutablePath = 'python3';
+// }
 
 let rootFolderPath = app.getPath('userData');
 let dataFilePath = path.join(rootFolderPath, 'design_files_metadata.json');
@@ -135,8 +135,8 @@ function loadSettings() {
 
 function checkAndInstallDependencies() {
   return new Promise((resolve, reject) => {
-    // let scriptPath = path.join(__dirname, process.platform === 'win32' ? 'install_dependencies.cmd' : 'libinstall.sh');
-    let scriptPath = path.join(process.resourcesPath, process.platform === 'win32' ? 'install_dependencies.cmd' : 'libinstall.sh');
+    let scriptPath = path.join(__dirname, process.platform === 'win32' ? 'install_dependencies.cmd' : 'libinstall.sh');
+    // let scriptPath = path.join(process.resourcesPath, process.platform === 'win32' ? 'install_dependencies.cmd' : 'libinstall.sh');
 
     // Execute the script
     exec(`"${scriptPath}"`, (error, stdout, stderr) => {

@@ -11,18 +11,18 @@ Figma Local Font Extractor is a tool designed to help designers manage their fon
 ### Step 1: Install the Figma Plugin
 1. Open Figma.
 2. Go to the Figma Plugin section in the Figma app.
-3. Search for "Font Sync" and install the plugin. (Not yet published)
+3. Search for "Font Sync" and add the plugin.
 
-### Step 2: Install the Desktop Helper(Not Yet Finished)
+### Step 2: Install the Desktop Helper
 1. Download the latest release of the Desktop Helper from the [Releases](#) page.
-2. Unzip the downloaded file.
-3. Run the installer and follow the instructions to install the application on your computer.
+2. Open the desktop app.
+3. Run the plugin inside figma.
 
 ### Step 3: Using Font Manager
 1. Open a Figma file where you want to manage fonts.
 2. Run the Font Sync plugin from the Figma interface.
 3. Use the plugin to list the fonts used in the document.
-4. Open the desktop helper app and make sure you have selected a directory for storaging the files.
+4. On the desktop helper app, make sure you have selected a directory for storaging the files.
 5. Click the "Send to App" button in the plugin to send the font data to the Desktop Helper.
 6. The Desktop Helper will receive the data and allow you to extract and manage the fonts locally.
 
@@ -30,3 +30,4 @@ Figma Local Font Extractor is a tool designed to help designers manage their fon
 - List all fonts used in a Figma document.
 - Extract fonts used in figma in your local system so you could send it to others easily.
 - Manage font files and organize them in folders.
+- Cloud Sync (WIP)
